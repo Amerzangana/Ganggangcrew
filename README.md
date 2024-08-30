@@ -91,3 +91,17 @@ test('Create Room', async ({ page }) => {
   await page.getByRole('link', { name: 'Back' }).click();
 
 });
+
+test('Test Bills', async ({ page }) => {
+ 
+  await page.locator('div').filter({ hasText: /^BillsTotal:/ }).getByRole('link').click();
+  await expect(page.getByRole('heading', { name: 'Bills' })).toBeVisible();
+  await page.getByRole('link', { name: 'Create Bill' }).click();
+  await page.fill('#app > div > div:nth-child(2) > div:nth-child(1) > input[type=number]', " 1500 ");
+  await page.locator('.checkbox').click();
+  await page.getByText('Save').click();
+  await expect(page.getByRole('heading', { name: 'ID: 2' })).toBeVisible();
+  await expect(page.getByText('Value: 1500kr').first()).toBeVisible();
+  await page.waitForTimeout(5000);
+  
+});
