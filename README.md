@@ -43,3 +43,51 @@ docker build -t my-vue-app .
 docker run -d -p 3000:3000 my-vue-app
 
 ```
+
+
+import { test, expect } from '@playwright/test';
+
+
+
+test.beforeEach(async ({ page }) => {
+  await page.goto('http://localhost:3000/login/');
+  await expect(page.getByRole('heading', { name: 'Login' })).toBeVisible();
+
+  await page.locator('input[type="text"]').fill("tester01");
+  await page.locator('input[type="password"]').fill("GteteqbQQgSr88SwNExUQv2ydb7xuf8c");
+  await page.getByRole('button', { name: 'Login' }).click();
+  await page.waitForTimeout(10000);
+  await expect(page.getByRole('heading', { name: 'Tester Hotel Overview'})).toBeVisible();
+});
+
+test('Log in', async ({ page }) => {
+  await expect(page.getByRole('heading', { name: 'Tester Hotel Overview'})).toBeVisible();
+
+});
+
+
+test('Create Room', async ({ page }) => {
+
+  await page.locator('#app > div > div > div:nth-child(1) > a').click();
+  await page.waitForTimeout(5000);
+  await expect(page.getByRole('heading', { name: 'Rooms'})).toBeVisible();
+  await page.waitForTimeout(1000);
+  await page.getByRole('link', { name: 'Create Room' }).click();
+  await page.waitForTimeout(10000);
+  await page.getByRole('combobox').click();
+  await page.waitForTimeout(1000);
+  await page.selectOption('#app > div > div:nth-child(2) > div:nth-child(1) > select', { label: 'Single' });
+  await page.waitForTimeout(1000);
+  await page.fill('#app > div > div:nth-child(2) > div:nth-child(2) > input[type=number]', '3');
+  await page.fill('#app > div > div:nth-child(2) > div:nth-child(3) > input[type=number]', '3');
+  await page.locator('.checkbox').click();
+  await page.fill('#app > div > div:nth-child(2) > div:nth-child(5) > input[type=number]', '999');
+  await page.locator('#app > div > div:nth-child(2) > div:nth-child(6) > select > option:nth-child(3)').click();
+  await page.locator('#app > div > div.actions > a.btn.blue').click();
+  await expect(page.getByRole('heading', { name: 'Floor 3, Room' })).toBeVisible();
+  await expect(page.getByText('Category: single')).toBeVisible();
+  await expect(page.getByText('Price: 999kr')).toBeVisible();
+  await expect(page.getByText('Features: sea view')).toBeVisible();
+  await page.getByRole('link', { name: 'Back' }).click();
+
+});
