@@ -105,3 +105,17 @@ test('Test Bills', async ({ page }) => {
   await page.waitForTimeout(5000);
   
 });
+
+test('Create client', async ({ page }) => {
+
+  await page.locator('div').filter({ hasText: /^ClientsNumber: 2View$/ }).getByRole('link').click();
+
+  await page.getByRole('link', { name: 'Create Client' }).click();
+
+  await expect(page.getByRole('heading', { name: 'New Client'})).toBeVisible();
+  await page.fill('#app > div > div:nth-child(2) > div:nth-child(1) > input[type=text]', "Lena Handen");
+  await page.fill('#app > div > div:nth-child(2) > div:nth-child(2) > input[type=email]', "Lena@Handen.se");
+  await page.fill('#app > div > div:nth-child(2) > div:nth-child(3) > input[type=text]', "12345678");
+  await page.getByText('Save').click()
+  await expect(page.getByRole('heading', { name: 'Lena Handen'})).toBeVisible();
+});
